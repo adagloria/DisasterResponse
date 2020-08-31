@@ -7,6 +7,7 @@ from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.datasets import make_multilabel_classification
@@ -107,7 +108,7 @@ def build_model():
              ('starting_verb', StartingVerbExtractor()),
          ])),
 
-        ('clf', MultiOutputClassifier(AdaBoostClassifier()))
+        ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
    
   parameters = {'features__text_pipeline__tfidf__use_idf': (True, False),
