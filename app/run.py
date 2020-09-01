@@ -26,11 +26,11 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('df', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -42,6 +42,16 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    
+    #checking earthquake, storm and fire status grouping by genre
+    earthquake_one = df[df['earthquake']==1].groupby('genre').count()['message']
+    earthquake_zero = df[df['earthquake']==0].groupby('genre').count()['message']
+    
+    storm_one = df[df['storm']==1].groupby('genre').count()['message']
+    storm_zero = df[df['storm']==0].groupby('genre').count()['message']
+    
+    fire_one = df[df['fire']==1].groupby('genre').count()['message']
+    fire_zero = df[df['fire']==0].groupby('genre').count()['message']
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -63,8 +73,89 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+        {
+            'data': [
+                Bar(
+                    x=genre_names,
+                    y=earthquake_one,
+                    name = 'Earthquake'
+
+                ),
+                Bar(
+                    x=genre_names,
+                    y= earthquake_zero,
+                    name = 'No Earthquake'
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of message by genre and \'Earthquake\' class ',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                },
+                'barmode' : 'group'
+            }
+        },
+          {
+            'data': [
+                Bar(
+                    x=genre_names,
+                    y=fire_one,
+                    name = 'Fire'
+
+                ),
+                Bar(
+                    x=genre_names,
+                    y= fire_zero,
+                    name = 'No Fire'
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of message by genre and \'Fire\' class ',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                },
+                'barmode' : 'group'
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=genre_names,
+                    y=storm_one,
+                    name = 'Storm'
+
+                ),
+                Bar(
+                    x=genre_names,
+                    y= storm_zero,
+                    name = 'No Storm'
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of message by genre and \'Storm\' class ',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                },
+                'barmode' : 'group'
+            }
         }
+        
     ]
+    
+    
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
